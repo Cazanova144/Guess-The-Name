@@ -185,10 +185,25 @@ const startBtnEl = document.querySelector('#start-btn');
 const nextBtnEl = document.querySelector('#next-btn');
 const quizContainerEl = document.querySelector('#quiz-container');
 const mainContainerEl = document.querySelector('#main-container');
+const imgEl = document.querySelector('#img');
+const nameBtnsEl = document.querySelector('#name-buttons');
+
+let shuffledImgs, currentImgIndex
 
 startBtnEl.addEventListener('click', e => {
 	console.log('Starta spel');
 	startBtnEl.classList.add('d-none');
 	quizContainerEl.classList.remove('d-none');
 	mainContainerEl.classList.remove('vh-75');
+	shuffledImgs = students.sort(() => Math.random() - .5);
+	currentImgIndex = 0;
+	setNextImg();
 });
+
+function setNextImg() {
+	showImg(shuffledImgs[currentImgIndex]);
+}
+
+function showImg(img) {
+	imgEl.innerHTML = `<img src="${img.image}" alt="" class="w-100">`;
+}
