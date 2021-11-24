@@ -184,3 +184,11 @@ const missing_students = [
 const startBtnEl = document.querySelector('#start-btn');
 const nextBtnEl = document.querySelector('#next-btn');
 const quizContainerEl = document.querySelector('#quiz-container');
+const mainContainerEl = document.querySelector('#main-container');
+
+startBtnEl.addEventListener('click', e => {
+	console.log('Starta spel');
+	startBtnEl.classList.add('d-none');
+	quizContainerEl.classList.remove('d-none');
+	mainContainerEl.classList.remove('vh-75');
+});
