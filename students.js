@@ -189,21 +189,43 @@ const imgEl = document.querySelector('#img');
 const nameBtnsEl = document.querySelector('#name-buttons');
 
 let shuffledImgs, currentImgIndex
+let shuffledNames, currentNameIndex
 
 startBtnEl.addEventListener('click', e => {
-	console.log('Starta spel');
 	startBtnEl.classList.add('d-none');
 	quizContainerEl.classList.remove('d-none');
 	mainContainerEl.classList.remove('vh-75');
 	shuffledImgs = students.sort(() => Math.random() - .5);
 	currentImgIndex = 0;
+	shuffledNames = students.sort(() => Math.random() - .5);
+	currentNameIndex = 0;
 	setNextImg();
+	setNextName();
 });
 
 function setNextImg() {
 	showImg(shuffledImgs[currentImgIndex]);
 }
 
-function showImg(img) {
-	imgEl.innerHTML = `<img src="${img.image}" alt="" class="w-100">`;
+function showImg(student) {
+	imgEl.innerHTML = `<img src="${student.image}" alt="" class="w-100">`;
+	
+}
+
+function setNextName() {
+	showName(shuffledNames[currentNameIndex]);
+}
+
+function showName(student) {
+	nameBtnsEl.innerHTML = `
+		<div id="name-buttons" class="btn-grid m-auto col-lg-9 col-md-9 col-sm-11">
+			<div class="row justify-content-between">
+				<button class="btn text-white col-lg-5 col-md-5 col-sm-12 my-2 bg-primary btn-outline-dark">${student.name}</button>
+				<button class="btn text-white col-lg-5 col-md-5 col-sm-12 my-2 bg-primary btn-outline-dark">${student.name}</button>
+			</div>
+			<div class="row justify-content-between">
+				<button class="btn text-white col-lg-5 col-md-5 col-sm-12 my-2 bg-primary btn-outline-dark">${student.name}</button>
+				<button class="btn text-white col-lg-5 col-md-5 col-sm-12 my-2 bg-primary btn-outline-dark">${student.name}</button>
+			</div>
+		</div>`;
 }
