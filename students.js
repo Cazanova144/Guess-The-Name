@@ -188,6 +188,9 @@ const mainContainerEl = document.querySelector('#main-container');
 const imgEl = document.querySelector('#img');
 const nameBtnsEl = document.querySelector('#name-buttons');
 
+// En array för studenter man redan gissat på
+const guessedStudents = [];
+
 let shuffledImgs, currentImgIndex
 let shuffledNames, currentNameIndex
 
@@ -234,6 +237,9 @@ nameBtnsEl.addEventListener('click', e => {
 	if (e.target.tagName === "BUTTON" && students.indexOf(students.name === students.indexOf(students.image))) {
 		e.target.classList.remove('bg-primary');
 		e.target.classList.add('bg-success');
+	} else {
+		e.target.classList.remove('bg-primary');
+		e.target.classList.add('bg-danger');
 	}
 
 	nextBtnEl.classList.remove('d-none');
@@ -247,4 +253,10 @@ nextBtnEl.addEventListener('click', e => {
 	currentNameIndex = 0;
 	setNextImg();
 	setNextName();
+
+	students.shift(students.image && students.name);
+	guessedStudents.push(students.image && students.name);
+
+	console.log(students);
+	console.log(guessedStudents);
 });
