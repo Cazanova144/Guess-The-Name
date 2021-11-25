@@ -231,10 +231,20 @@ function showName(student) {
 }
 
 nameBtnsEl.addEventListener('click', e => {
-
 	if (e.target.tagName === "BUTTON" && students.indexOf(students.name === students.indexOf(students.image))) {
-		console.log('det funkar');
 		e.target.classList.remove('bg-primary');
 		e.target.classList.add('bg-success');
 	}
+
+	nextBtnEl.classList.remove('d-none');
+});
+
+nextBtnEl.addEventListener('click', e => {
+	nextBtnEl.classList.add('d-none');
+	shuffledImgs = students.sort(() => Math.random() - .5);
+	currentImgIndex = 0;
+	shuffledNames = students.sort(() => Math.random() - .5);
+	currentNameIndex = 0;
+	setNextImg();
+	setNextName();
 });
