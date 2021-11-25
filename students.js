@@ -229,3 +229,12 @@ function showName(student) {
 			</div>
 		</div>`;
 }
+
+nameBtnsEl.addEventListener('click', e => {
+
+	if (e.target.tagName === "BUTTON" && students.indexOf(students.name === students.indexOf(students.image))) {
+		console.log('det funkar');
+		e.target.classList.remove('bg-primary');
+		e.target.classList.add('bg-success');
+	}
+});
