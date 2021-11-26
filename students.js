@@ -191,71 +191,101 @@ const nameBtnsEl = document.querySelector('#name-buttons');
 // En array för studenter man redan gissat på
 const guessedStudents = [];
 
-let shuffledImgs, currentImgIndex
-let shuffledNames, currentNameIndex
+let index
+let correctStudent
+let a = 0;
+// let fixGuessedStudents
+
+const shuffleArray = (array) => {
+	for (var i = array.length - 1; i > 0; i--) {	
+		var j = Math.floor(Math.random() * (i + 1));	
+		var temp = array[i];	
+		array[i] = array[j];	
+		array[j] = temp;	
+		}	
+	return array;	
+}
 
 startBtnEl.addEventListener('click', e => {
 	startBtnEl.classList.add('d-none');
 	quizContainerEl.classList.remove('d-none');
 	mainContainerEl.classList.remove('vh-75');
-	shuffledImgs = students.sort(() => Math.random() - .5);
-	currentImgIndex = 0;
-	shuffledNames = students.sort(() => Math.random() - .5);
-	currentNameIndex = 0;
-	setNextImg();
-	setNextName();
+
+	shuffleArray(students);
+	showName();
 });
 
-function setNextImg() {
-	showImg(shuffledImgs[currentImgIndex]);
-}
+function showName() {
+	const studentSlice = students.slice(0, 4);
+	index = Math.floor(Math.random() * 4)
+	correctStudent = studentSlice[index];
 
-function showImg(student) {
-	imgEl.innerHTML = `<img src="${student.image}" alt="" class="w-100">`;
-	
-}
+	shuffleArray(studentSlice);
 
-function setNextName() {
-	showName(shuffledNames[currentNameIndex]);
-}
-
-function showName(student) {
 	nameBtnsEl.innerHTML = `
 		<div id="name-buttons" class="btn-grid m-auto col-lg-9 col-md-9 col-sm-11">
 			<div class="row justify-content-between">
-				<button class="btn text-white col-lg-5 col-md-5 col-sm-12 my-2 bg-primary btn-outline-dark">${student.name}</button>
-				<button class="btn text-white col-lg-5 col-md-5 col-sm-12 my-2 bg-primary btn-outline-dark">${student.name}</button>
+				<button class="btn text-white col-lg-5 col-md-5 col-sm-12 my-2 bg-primary btn-outline-dark">${studentSlice[0].name}</button>
+				<button class="btn text-white col-lg-5 col-md-5 col-sm-12 my-2 bg-primary btn-outline-dark">${studentSlice[1].name}</button>
 			</div>
 			<div class="row justify-content-between">
-				<button class="btn text-white col-lg-5 col-md-5 col-sm-12 my-2 bg-primary btn-outline-dark">${student.name}</button>
-				<button class="btn text-white col-lg-5 col-md-5 col-sm-12 my-2 bg-primary btn-outline-dark">${student.name}</button>
+				<button class="btn text-white col-lg-5 col-md-5 col-sm-12 my-2 bg-primary btn-outline-dark">${studentSlice[2].name}</button>
+				<button class="btn text-white col-lg-5 col-md-5 col-sm-12 my-2 bg-primary btn-outline-dark">${studentSlice[3].name}</button>
 			</div>
 		</div>`;
+
+	imgEl.innerHTML = `<img src="${correctStudent.image}" alt="" class="w-100">`
+
+
+
+	// FUNKADE
+	nameBtnsEl.addEventListener('click', deleteEventListener)
 }
 
-nameBtnsEl.addEventListener('click', e => {
-	if (e.target.tagName === "BUTTON" && students.indexOf(students.name === students.indexOf(students.image))) {
+const deleteEventListener = function (e) {
+	if (e.target.tagName === "BUTTON" && e.target.innerText === correctStudent.name) {
 		e.target.classList.remove('bg-primary');
 		e.target.classList.add('bg-success');
-	} else {
+		guessedStudents.push(students[index]);
+		a += 1;
+		console.log(a);
+	} else if (e.target.tagName === "BUTTON" && e.target.innerText !== correctStudent.name) {
 		e.target.classList.remove('bg-primary');
 		e.target.classList.add('bg-danger');
 	}
-
 	nextBtnEl.classList.remove('d-none');
-});
+	nameBtnsEl.removeEventListener('click', deleteEventListener)
+
+}
 
 nextBtnEl.addEventListener('click', e => {
 	nextBtnEl.classList.add('d-none');
-	shuffledImgs = students.sort(() => Math.random() - .5);
-	currentImgIndex = 0;
-	shuffledNames = students.sort(() => Math.random() - .5);
-	currentNameIndex = 0;
-	setNextImg();
-	setNextName();
 
-	students.shift(students.image && students.name);
-	guessedStudents.push(students.image && students.name);
+	// a += 1;
+	// console.log(a);
+
+	students.splice(index, 1);
+
+	// fixGuessedStudents = guessedStudents.length - (guessedStudents.length - 1);
+	// fixGuessedStudents();
+
+	// const fixGuessedStudents = (z) => {
+
+	// 	// z.length = guessedStudents.length - (guessedStudents.length - (guessedStudents.length - 1));
+	// 	// console.log(z);
+
+	// 	if (guessedStudents.length <= 1) {
+	// 		return;
+	// 	} else if (guessedStudents.length > 1) {
+	// 		z.length = guessedStudents.length - (guessedStudents.length - (guessedStudents.length - 1));
+	// 		return z;
+	// 	}
+	// 	console.log(z);
+	// }
+	// fixGuessedStudents(guessedStudents);
+
+	shuffleArray(students);
+	showName();
 
 	console.log(students);
 	console.log(guessedStudents);
