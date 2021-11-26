@@ -191,11 +191,12 @@ const nameBtnsEl = document.querySelector('#name-buttons');
 // En array för studenter man redan gissat på
 const guessedStudents = [];
 
+// Variabler som kommer användas senare
 let index
 let correctStudent
 let a = 0;
-// let fixGuessedStudents
 
+// Shufflearray funktion för att blanda en array slumpmässigt
 const shuffleArray = (array) => {
 	for (var i = array.length - 1; i > 0; i--) {	
 		var j = Math.floor(Math.random() * (i + 1));	
@@ -206,6 +207,7 @@ const shuffleArray = (array) => {
 	return array;	
 }
 
+// Vad som händer när man klickar på start
 startBtnEl.addEventListener('click', e => {
 	startBtnEl.classList.add('d-none');
 	quizContainerEl.classList.remove('d-none');
@@ -215,11 +217,16 @@ startBtnEl.addEventListener('click', e => {
 	showName();
 });
 
+// Här börjar spelet
 function showName() {
+
+	// Tar en slumpmässig index mellan 0-3
 	const studentSlice = students.slice(0, 4);
 	index = Math.floor(Math.random() * 4)
+	// Rätt student kan vara mellan index 0-3 på knapparna
 	correctStudent = studentSlice[index];
 
+	// Blandar studentSlice
 	shuffleArray(studentSlice);
 
 	nameBtnsEl.innerHTML = `
@@ -236,53 +243,31 @@ function showName() {
 
 	imgEl.innerHTML = `<img src="${correctStudent.image}" alt="" class="w-100">`
 
-
-
-	// FUNKADE
+	// Event listener för namnknapparna, kallar på funktionen "deleteEventListener"
 	nameBtnsEl.addEventListener('click', deleteEventListener)
 }
 
+// Funktionen deleteEventListener
 const deleteEventListener = function (e) {
 	if (e.target.tagName === "BUTTON" && e.target.innerText === correctStudent.name) {
 		e.target.classList.remove('bg-primary');
 		e.target.classList.add('bg-success');
 		guessedStudents.push(students[index]);
-		a += 1;
-		console.log(a);
 	} else if (e.target.tagName === "BUTTON" && e.target.innerText !== correctStudent.name) {
 		e.target.classList.remove('bg-primary');
 		e.target.classList.add('bg-danger');
 	}
 	nextBtnEl.classList.remove('d-none');
-	nameBtnsEl.removeEventListener('click', deleteEventListener)
 
+	// Tar bort event listenern (behövde göra detta för att undvika bugg)
+	nameBtnsEl.removeEventListener('click', deleteEventListener)
 }
 
+// Event listener för "Nästa" knappen
 nextBtnEl.addEventListener('click', e => {
 	nextBtnEl.classList.add('d-none');
 
-	// a += 1;
-	// console.log(a);
-
 	students.splice(index, 1);
-
-	// fixGuessedStudents = guessedStudents.length - (guessedStudents.length - 1);
-	// fixGuessedStudents();
-
-	// const fixGuessedStudents = (z) => {
-
-	// 	// z.length = guessedStudents.length - (guessedStudents.length - (guessedStudents.length - 1));
-	// 	// console.log(z);
-
-	// 	if (guessedStudents.length <= 1) {
-	// 		return;
-	// 	} else if (guessedStudents.length > 1) {
-	// 		z.length = guessedStudents.length - (guessedStudents.length - (guessedStudents.length - 1));
-	// 		return z;
-	// 	}
-	// 	console.log(z);
-	// }
-	// fixGuessedStudents(guessedStudents);
 
 	shuffleArray(students);
 	showName();
