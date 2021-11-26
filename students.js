@@ -198,6 +198,7 @@ const guessedStudentsWrong = [];
 let index
 let correctStudent
 let emptyGuessedStudents
+let emptyGuessedStudentsWrong
 let refillStudents
 
 // Shufflearray funktion för att blanda en array slumpmässigt
@@ -270,6 +271,8 @@ const deleteEventListener = function (e) {
 		e.target.classList.remove('bg-primary');
 		e.target.classList.add('bg-danger');
 		guessedStudentsWrong.push(students[index]);
+	} else if (e.target.tagName === "DIV") {
+		return;
 	}
 
 	// Tar bort CSS klassen "display: none;"
@@ -311,16 +314,11 @@ nextBtnEl.addEventListener('click', e => {
 
 	// Startar nästa runda
 	showName();
-
-	console.log(students);
-	console.log(guessedStudents);
-	console.log(guessedStudentsWrong);
 });
 
 // Resultaten
 resultsEl.addEventListener('click', e => {
 	if (e.target.tagName === "BUTTON") {
-		console.log("Reset knappen funkar");
 
 		// Tömmer arrayerna på studenterna man gissat på
 		emptyGuessedStudents = guessedStudents.splice(0, guessedStudents.length);
@@ -329,10 +327,6 @@ resultsEl.addEventListener('click', e => {
 		// Sätter in studenterna i original arrayen igen
 		refillStudents = students.concat(emptyGuessedStudents, emptyGuessedStudentsWrong);
 		students = refillStudents
-
-		console.log(students);
-		console.log(guessedStudents);
-		console.log(guessedStudentsWrong);
 
 		// Lägger till och/eller tar bort "display: none;" på samtliga element
 		resultsEl.classList.add('d-none');
