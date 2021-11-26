@@ -1,4 +1,4 @@
-const students = [
+let students = [
 	{
 		"name" : "Adi Dzocaj",
 		"image": "assets/images/students/adi-dzocaj.jpg",
@@ -186,15 +186,19 @@ const nextBtnEl = document.querySelector('#next-btn');
 const quizContainerEl = document.querySelector('#quiz-container');
 const mainContainerEl = document.querySelector('#main-container');
 const imgEl = document.querySelector('#img');
-const nameBtnsEl = document.querySelector('#name-buttons');
+const nameBtnsEl = document.querySelector('#name-btns');
+const resultsEl = document.querySelector('#results');
+const resetBtnEl = document.querySelector('#reset-btn');
 
-// En array för studenter man redan gissat på
+// Två arrayer för studenter man redan gissat på
 const guessedStudents = [];
+const guessedStudentsWrong = [];
 
 // Variabler som kommer användas senare
 let index
 let correctStudent
-let a = 0;
+let emptyGuessedStudents
+let refillStudents
 
 // Shufflearray funktion för att blanda en array slumpmässigt
 const shuffleArray = (array) => {
@@ -209,11 +213,17 @@ const shuffleArray = (array) => {
 
 // Vad som händer när man klickar på start
 startBtnEl.addEventListener('click', e => {
+
+	// Lägger till och/eller tar bort "display: none;" på samtliga element
 	startBtnEl.classList.add('d-none');
 	quizContainerEl.classList.remove('d-none');
+
+	// Tar bort CSS stilklass (height: 75vh;) från #main-container
 	mainContainerEl.classList.remove('vh-75');
 
+	// Blandar objekten i "students"
 	shuffleArray(students);
+	// Kallar på showName() funktionen
 	showName();
 });
 
@@ -223,14 +233,16 @@ function showName() {
 	// Tar en slumpmässig index mellan 0-3
 	const studentSlice = students.slice(0, 4);
 	index = Math.floor(Math.random() * 4)
+
 	// Rätt student kan vara mellan index 0-3 på knapparna
 	correctStudent = studentSlice[index];
 
 	// Blandar studentSlice
 	shuffleArray(studentSlice);
 
+	// Lägger in elevernas namn
 	nameBtnsEl.innerHTML = `
-		<div id="name-buttons" class="btn-grid m-auto col-lg-9 col-md-9 col-sm-11">
+		<div id="name-btns" class="btn-grid m-auto col-lg-9 col-md-9 col-sm-11">
 			<div class="row justify-content-between">
 				<button class="btn text-white col-lg-5 col-md-5 col-sm-12 my-2 bg-primary btn-outline-dark">${studentSlice[0].name}</button>
 				<button class="btn text-white col-lg-5 col-md-5 col-sm-12 my-2 bg-primary btn-outline-dark">${studentSlice[1].name}</button>
@@ -241,9 +253,10 @@ function showName() {
 			</div>
 		</div>`;
 
+	// Lägger in den korrekta elevens bild
 	imgEl.innerHTML = `<img src="${correctStudent.image}" alt="" class="w-100">`
 
-	// Event listener för namnknapparna, kallar på funktionen "deleteEventListener"
+	// Click event listener för namnknapparna, kallar på funktionen "deleteEventListener"
 	nameBtnsEl.addEventListener('click', deleteEventListener)
 }
 
@@ -256,22 +269,80 @@ const deleteEventListener = function (e) {
 	} else if (e.target.tagName === "BUTTON" && e.target.innerText !== correctStudent.name) {
 		e.target.classList.remove('bg-primary');
 		e.target.classList.add('bg-danger');
+		guessedStudentsWrong.push(students[index]);
 	}
+
+	// Tar bort CSS klassen "display: none;"
 	nextBtnEl.classList.remove('d-none');
 
 	// Tar bort event listenern (behövde göra detta för att undvika bugg)
-	nameBtnsEl.removeEventListener('click', deleteEventListener)
+	nameBtnsEl.removeEventListener('click', deleteEventListener);
 }
 
 // Event listener för "Nästa" knappen
 nextBtnEl.addEventListener('click', e => {
+	// Tar bort "Nästa" knappen
 	nextBtnEl.classList.add('d-none');
 
+	// Stoppar spelet efter 20 elever
+	if (students.length <= 20) {
+
+		// Lägger till och/eller tar bort "display: none;" på samtliga element
+		imgEl.classList.add('d-none');
+		nameBtnsEl.classList.add('d-none');
+		nextBtnEl.classList.add('d-none');
+		resultsEl.classList.remove('d-none');
+
+		// Lägger in resultatet på skärmen
+		resultsEl.innerHTML = `
+		<h2 class="d-flex justify-content-center text-align-start">Du fick ${guessedStudents.length} rätt av 20</h3>
+
+        <div class="row justify-content-center">
+            <button id="reset-btn" class="btn text-white col-lg-5 col-md-5 col-sm-12 my-2 bg-primary btn-outline-dark d-flex justify-content-center">Kör igen</button>
+        </div>
+		`
+	} 
+
+	// Tar bort eleven
 	students.splice(index, 1);
 
+	// Blandar "students" arrayen
 	shuffleArray(students);
+
+	// Startar nästa runda
 	showName();
 
 	console.log(students);
 	console.log(guessedStudents);
+	console.log(guessedStudentsWrong);
+});
+
+// Resultaten
+resultsEl.addEventListener('click', e => {
+	if (e.target.tagName === "BUTTON") {
+		console.log("Reset knappen funkar");
+
+		// Tömmer arrayerna på studenterna man gissat på
+		emptyGuessedStudents = guessedStudents.splice(0, guessedStudents.length);
+		emptyGuessedStudentsWrong = guessedStudentsWrong.splice(0,guessedStudentsWrong.length);
+
+		// Sätter in studenterna i original arrayen igen
+		refillStudents = students.concat(emptyGuessedStudents, emptyGuessedStudentsWrong);
+		students = refillStudents
+
+		console.log(students);
+		console.log(guessedStudents);
+		console.log(guessedStudentsWrong);
+
+		// Lägger till och/eller tar bort "display: none;" på samtliga element
+		resultsEl.classList.add('d-none');
+		imgEl.classList.remove('d-none');
+		nameBtnsEl.classList.remove('d-none');
+		nextBtnEl.classList.remove('d-none');
+
+		// Blandar objekten i "students"
+		shuffleArray(students);
+		// Startar om spelet
+		showName();
+	}
 });
